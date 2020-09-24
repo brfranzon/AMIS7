@@ -1,0 +1,83 @@
+<!--
+    public ID: number;
+    public Postleitzeil: number;
+    public Status: number;
+    public Nachname: string;
+    public Vorname: string;
+    public Tel: number;
+    public Strasse: string;
+    public Stadt: string;
+-->
+
+<!--ul *ngFor = "let s of schueler">
+ 
+
+   <li> {{ s.ID }}, {{ s.Postleitzeil }}, {{ s.Status }}</li>
+
+
+
+</ul-->
+
+
+<!--div class="card">
+     <p-table #dt1 [value]="schueler"
+      selectionMode="single" 
+      [(selection)]="selectedSchueler" 
+      dataKey="id" 
+      styleClass="p-datatable-schueler"
+      [rows]="10" [paginator]="true">
+
+    <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="Vorname"> Vorname <p-sortIcon field="Vorname"></p-sortIcon>
+                </th>           
+            </tr>
+
+            <tr>
+                <th>
+                    <input pInputText type="text" (input)="dt1.filter($event.target.value, 'Vorname', 'contains')"
+                     [value]="dt1.filters['Vorname']?.value"
+                     placeholder="Suche nach Vorname"
+                     class="p-column-filter">
+                </th>             
+            </tr>
+    </ng-template>
+
+
+     <ng-template pTemplate="body" let-schueler>
+            <tr [pSelectableRow]="schueler">
+                <td>
+                    {{schueler.Vorname}}
+                </td>
+              </tr>
+     </ng-template>
+
+
+     <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="4">No customers found.</td>
+            </tr>
+     </ng-template>
+     
+    </p-table>
+
+</div-->
+
+<p-table [columns]="cols" [value]="schueler">
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th *ngFor="let col of columns">
+              {{col.header}}
+          </th>         
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+      <tr>
+          <td *ngFor="let col of columns">
+                  {{rowData[col.field]}}
+          </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+
