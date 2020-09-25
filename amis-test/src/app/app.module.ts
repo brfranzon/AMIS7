@@ -4,7 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
-
+import { FormsModule } from '@angular/forms';
 
 //PrimeNG
 import {TableModule} from 'primeng/table';
@@ -62,7 +62,8 @@ import { VsSchuelerTableListComponent } from './vs-schueler-table-list/vs-schuel
     InputTextModule,
     CdkTableModule,
     A11yModule,
-    MatTableModule
+    MatTableModule,
+    FormsModule
     
   ],
   providers: [],
