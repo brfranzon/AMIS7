@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component,  OnInit } from '@angular/core';
 import { SchuelerService } from '../vs_schueler_data/schueler.service';
 import { SchuelerList } from '../vs_schueler_data/schueler-model';
 
@@ -10,12 +10,16 @@ import { SchuelerList } from '../vs_schueler_data/schueler-model';
 
 export class VsSchuelerTableListComponent implements OnInit {
 
-  @Input() schueler: SchuelerList[];
-  @Input() selectedSchueler: SchuelerList[];
+  schueler: SchuelerList[];
+  selectedSchueler: SchuelerList[];
+
+  schueler_ = new SchuelerList ();
 
   cols: any[];
   exportColumns: any[];
+
   submitted: boolean;
+  schuelerDialog: boolean;
 
   constructor(private _schuelerService: SchuelerService) { }
 
@@ -31,9 +35,42 @@ export class VsSchuelerTableListComponent implements OnInit {
       { field: 'Status', header: 'Status'}
   ];
   this.exportColumns = this.cols.map(col => ({title: col.header, dataKey: col.field}));
-
   }
  
+ 
+  schuelerRow(rowData: any){
+    console.log(rowData);
+  }
+
+  
+  openNew() {
+     this.schuelerDialog = true;
+     this.submitted = false;
+     console.log(this.cols);
+
+  }
+  
+  neuSchuelerSpeicher(){
+     this.submitted = true;
+     this.schueler_.id = this.createId();
+     this._schuelerService.createNeuSchueler(this.schueler_).subscribe( 
+       success => { console.log("Schueler Created!") }
+       );
+     
+   }
+
+
+
+ createId(): string {
+        let id = '';
+        var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        for ( var i = 0; i < 32; i++ ) {
+            id += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return id.toUpperCase();
+    }
+
+
   exportExcel() {
     import("xlsx").then(xlsx => {
         const worksheet = xlsx.utils.json_to_sheet(this.schueler);
@@ -52,10 +89,6 @@ export class VsSchuelerTableListComponent implements OnInit {
         });
         FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
     });
-  }
-
-  schuelerRow(rowData: any){
-    console.log(rowData);
   }
 
   

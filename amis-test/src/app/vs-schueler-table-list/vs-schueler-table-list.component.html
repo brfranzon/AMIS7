@@ -1,11 +1,26 @@
+
+<div class="container mt-5">
+
+    <div class ="tollbar p-1">
+        <button pButton pRipple label="Neu" icon="pi pi-plus"
+        class="p-button-success p-mr-2" 
+        (click)="openNew()"></button>
+    </div>
+
+  
+
 <p-table #dt [columns]="cols" 
         [value]="schueler"
         selectionMode="multiple" 
         [(selection)]="selectedSchueler"
         [rows]="10" [paginator]="true" 
         >
-  <ng-template pTemplate="caption">
+
+
+
+     <ng-template pTemplate="caption">
       <div class="d-flex justify-content-end">
+           
           <button  type="button" pButton pRipple icon="pi pi-file-o" 
                     (click)="dt.exportCSV()" class="mr-4" pTooltip="CSV"
                     data-toggle="tooltip" data-placement="top"
@@ -51,3 +66,87 @@
   </ng-template>
 
 </p-table>
+
+</div>
+
+<p-dialog [(visible)]="schuelerDialog" 
+        [style]="{width: '450px'}"
+        [modal]="true" 
+        styleClass="p-fluid">
+
+    <ng-template pTemplate="content">
+
+        <!--div class="p-field" *ngFor = "let col of cols; let i=index">
+            
+            <label for="col.header">{{col.header}}</label>
+            <input type="text" pInputText name="col.header"
+            [(ngModel)] = "schueler_."
+             required autofocus 
+            />
+        </div-->
+
+        <div class="p-field">
+            <label for="Vorname">Vorname</label>
+            <input type="text" pInputText name="Vorname"
+            [(ngModel)] = "schueler_.Vorname"
+             required autofocus 
+            />
+            <small class="p-invalid"
+            *ngIf="submitted && !schueler_.Vorname">
+            Vorname bitte eingeben!
+            </small>
+        </div>
+
+        <div class="p-field">
+            <label for="Nachname">Nachname</label>
+            <input type="text" pInputText name="Nachname"
+            [(ngModel)] = "schueler_.Nachname"
+             required autofocus 
+            />
+            <small class="p-invalid"
+            *ngIf="submitted && !schueler_.Nachname">
+            Nachname bitte eingeben!
+            </small>
+        </div>
+
+        <div class="p-field">
+            <label for="Strasse">Strasse</label>
+            <input type="text" pInputText name="Strasse"
+            [(ngModel)] = "schueler_.Strasse"
+             required autofocus 
+            />
+            <small class="p-invalid"
+            *ngIf="submitted && !schueler_.Strasse">
+            Strasse bitte eingeben!
+            </small>
+        </div>
+
+        <div class="p-field">
+            <label for="Status">Status</label>
+            <input type="text" pInputText name="Status"
+            [(ngModel)] = "schueler_.Status"
+             required autofocus 
+            />
+            <small class="p-invalid"
+                   *ngIf="submitted && !schueler_.Status">
+                   Status bitte eingeben!
+           </small>
+        </div>
+    </ng-template>
+
+
+    <ng-template pTemplate="footer">
+
+        <button pButton pRipple label="Abbrechen"
+         icon="pi pi-times"
+         class="p-button-text"
+         ></button>
+
+        <button pButton pRipple label="Speicher" 
+        icon="pi pi-check" class="p-button-text" 
+        (click) = "neuSchuelerSpeicher()"
+      ></button>
+
+    </ng-template>
+</p-dialog>
+

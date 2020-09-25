@@ -1,6 +1,6 @@
 export class SchuelerList{
 
-    public ID: number;
+    public id: string;
     public Postleitzeil: number;
     public Status: number;
     public Nachname: string;
