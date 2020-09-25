@@ -18,30 +18,26 @@ import {ButtonModule} from 'primeng/button';
 import {DropdownModule} from 'primeng/dropdown';
 import {ProgressBarModule} from 'primeng/progressbar';
 import {InputTextModule} from 'primeng/inputtext';
+import {ToolbarModule} from 'primeng/toolbar';
 
 
 import { CdkTableModule } from '@angular/cdk/table';
 import { A11yModule } from '@angular/cdk/a11y';
-import { BidiModule } from '@angular/cdk/bidi';
-import { OverlayModule } from '@angular/cdk/overlay';
-import { PlatformModule } from '@angular/cdk/platform';
-import { ObserversModule } from '@angular/cdk/observers';
-import { PortalModule } from '@angular/cdk/portal';
-
-
 import {MatTableModule} from '@angular/material/table'; 
 
 // Privat
 import { AppComponent } from './app.component';
 import { VsListViewComponent } from './vs-list-view/vs-list-view.component';
 import { VsSchuelerTableListComponent } from './vs-schueler-table-list/vs-schueler-table-list.component';
+import { SchuelerFormComponent } from './schueler-form/schueler-form.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     VsListViewComponent,
-    VsSchuelerTableListComponent
+    VsSchuelerTableListComponent,
+    SchuelerFormComponent
   ],
   imports: [
     BrowserModule,
@@ -63,7 +59,8 @@ import { VsSchuelerTableListComponent } from './vs-schueler-table-list/vs-schuel
     CdkTableModule,
     A11yModule,
     MatTableModule,
-    FormsModule
+    FormsModule,
+    ToolbarModule
     
   ],
   providers: [],

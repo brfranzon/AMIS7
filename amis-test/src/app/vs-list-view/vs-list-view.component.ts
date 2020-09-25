@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'vs-list-view',
@@ -7,12 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class VsListViewComponent implements OnInit {
 
-  constructor() { }
+  showTableList: boolean = true;
+  buttonFlag: boolean = true;
+  constructor(private router: Router,
+              private route: ActivatedRoute) { }
 
-  ngOnInit(): void {
-
-
-
-  }
+  ngOnInit(): void { }
+ 
 
 }

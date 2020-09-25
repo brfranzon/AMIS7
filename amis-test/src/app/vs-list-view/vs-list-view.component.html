@@ -1,16 +1,16 @@
 <div class="container p-4">
 
-    <div class="mb-2">
-    <button class="btn  mr-2"><i class="fa fa-graduation-cap"></i> Neu </button>
-    <button class="btn  mr-2"><i class="fa fa-edit"></i> Bearbeiten</button>
-    <button class="btn  mr-2"><i class="fa fa-trash"></i>Löschen</button>
-   </div>
+  <div class="mb-2" *ngIf = "showTableList">
 
-   <vs-schueler-table-list></vs-schueler-table-list>
+    <button class="btn mr-2">
+      <i class="fa fa-graduation-cap"></i> Neu
+    </button>
 
+    <button class="btn mr-2"><i class="fa fa-edit"></i> Bearbeiten</button>
+
+    <button class="btn mr-2"><i class="fa fa-trash"></i>Löschen</button>
+  </div>
 </div>
 
-
-
-
+<vs-schueler-table-list> </vs-schueler-table-list>
 
