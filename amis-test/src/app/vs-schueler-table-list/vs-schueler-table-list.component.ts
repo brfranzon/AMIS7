@@ -1,6 +1,9 @@
 import { Component,  OnInit } from '@angular/core';
-import { SchuelerService } from '../vs_schueler_data/schueler.service';
-import { SchuelerList } from '../vs_schueler_data/schueler-model';
+import { MessageService } from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
+
+import { SchuelerModel } from '../vs_schueler_data/generic-http/schueler-model';
+import { SchuelerModelService } from '../vs_schueler_data/generic-http/schueler-model.service';
 
 @Component({
   selector: 'vs-schueler-table-list',
@@ -10,10 +13,15 @@ import { SchuelerList } from '../vs_schueler_data/schueler-model';
 
 export class VsSchuelerTableListComponent implements OnInit {
 
-  schueler: SchuelerList[];
-  selectedSchueler: SchuelerList[];
+  constructor(
+    private messageService: MessageService, 
+    private confirmationService: ConfirmationService,
+    private _schuelerModelService: SchuelerModelService) 
+    { }
 
-  schueler_ = new SchuelerList ();
+  AllSchueler: SchuelerModel[];
+  AllselectedSchueler: SchuelerModel[];
+  schueler = new SchuelerModel();
 
   cols: any[];
   exportColumns: any[];
@@ -21,46 +29,92 @@ export class VsSchuelerTableListComponent implements OnInit {
   submitted: boolean;
   schuelerDialog: boolean;
 
-  constructor(private _schuelerService: SchuelerService) { }
+  dataOnClickRow: any;
+
 
   ngOnInit(): void {
-    this._schuelerService.getListSchueler().subscribe(
-    data => this.schueler =  data
-    );
+    this.getAllSchueler();
 
     this.cols = [
       { field: 'Vorname', header: 'Vorname' },
       { field: 'Nachname', header: 'Nachname' } ,
       { field: 'Strasse', header: 'Strasse' },
-      { field: 'Status', header: 'Status'}
-  ];
-  this.exportColumns = this.cols.map(col => ({title: col.header, dataKey: col.field}));
+      { field: 'Stadt', header: 'Stadt'},
+      { field: 'IBAN', header: 'IBAN'},
+      { field: 'Postleitzeil', header: 'Postleitzeil'},
+      { field: 'Status', header: 'Status'},
+    
+    ];
+ 
+     this.exportColumns = this.cols.map(col => ({title: col.header, dataKey: col.field}));
   }
  
- 
-  schuelerRow(rowData: any){
-    console.log(rowData);
+  /* Alle Schueler aus dem Service */
+  getAllSchueler(){
+    this._schuelerModelService.findAll().subscribe(
+      data => this.AllSchueler = data
+    );
+      
   }
 
-  
+ /* on Click auf die Zeile */
+  schuelerRow(rowData: any){
+    console.table([rowData]);
+  }
+
+ /* open Dialog */
   openNew() {
      this.schuelerDialog = true;
      this.submitted = false;
-     console.log(this.cols);
-
   }
   
+  /* save Neuer Schueler */
   neuSchuelerSpeicher(){
-     this.submitted = true;
-     this.schueler_.id = this.createId();
-     this._schuelerService.createNeuSchueler(this.schueler_).subscribe( 
+       this.submitted = true;
+       this.schueler.id = this.createId();
+       this._schuelerModelService.save(this.schueler).subscribe( 
        success => { console.log("Schueler Created!") }
        );
-     
+
+       this._schuelerModelService.findAll().
+       subscribe(data => this.AllSchueler = data);
+       this.schuelerDialog = false;
+   }
+
+   cancelModal(){
+     this.schuelerDialog = false;
    }
 
 
+ /* delete Neuer Schueler */
+   confirmDelete(selectedSchueler: any) {
+     console.log(selectedSchueler[0].id);
 
+     this.confirmationService.confirm({
+        message: 'Möchten Sie es löschen?',
+        header: 'Löschen? :(',
+        icon: 'fa fa-trash',
+        accept: () => {
+          console.log(selectedSchueler[0].id);
+          this._schuelerModelService.delete(selectedSchueler[0].id).
+          subscribe(
+             success =>
+             {
+              this.messageService.add({severity:'success', summary: 
+              'OK!', detail: `Schueler mit ID ${selectedSchueler[0].id} gelöscht!`, life: 3000});  
+
+              this.AllselectedSchueler = [];
+              this.getAllSchueler(); 
+
+             },
+             (error) =>{console.log('Error delete!')}
+          )
+
+        }
+      });
+   }
+              
+/* create ID für die Neuer Schueler */
  createId(): string {
         let id = '';
         var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -71,9 +125,12 @@ export class VsSchuelerTableListComponent implements OnInit {
     }
 
 
+
+
+ /* Funktionen zum speichern */  
   exportExcel() {
     import("xlsx").then(xlsx => {
-        const worksheet = xlsx.utils.json_to_sheet(this.schueler);
+        const worksheet = xlsx.utils.json_to_sheet(this.AllSchueler);
         const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
         const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
         this.saveAsExcelFile(excelBuffer, "schueler");

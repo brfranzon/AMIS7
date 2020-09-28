@@ -1,43 +1,67 @@
+<p-toast></p-toast>
+<div *ngIf = "!AllSchueler">
+    <div class="preloader">
+        <div class="loading-data three-bounce">
+          <div class="bounce1"></div>
+          <div class="bounce2"></div>
+          <div class="bounce3"></div>
+        </div>
+      </div>
+</div>
 
-<div class="container mt-5">
-
+<div *ngIf = "AllSchueler">
     <div class ="tollbar p-1">
+
+        <!------- Neu ------->
         <button pButton pRipple label="Neu" icon="pi pi-plus"
         class="p-button-success p-mr-2" 
         (click)="openNew()"></button>
-    </div>
 
-  
+        <!------ Delete ----->
+        <button pButton pRipple label = "Delete" 
+        icon="pi pi-trash" class="p-button-danger ml-3" 
+        (click)="confirmDelete(AllselectedSchueler)"
+        [disabled]="!AllselectedSchueler || 
+        !AllselectedSchueler.length">
+        </button>
+</div>
 
+ 
+        <!------Tabelle für die Daten ----->
 <p-table #dt [columns]="cols" 
-        [value]="schueler"
+        [value]="AllSchueler"
         selectionMode="multiple" 
-        [(selection)]="selectedSchueler"
-        [rows]="10" [paginator]="true" 
-        >
+        [(selection)]="AllselectedSchueler"
+        [rows]="10" [paginator]="true">
 
+     <ng-template pTemplate="caption" class="d-flex align-item-center">
+       <div class="d-flex justify-content-start">
+       Total Schüler: {{ AllSchueler? AllSchueler.length : 0}}
+      </div>
 
-
-     <ng-template pTemplate="caption">
       <div class="d-flex justify-content-end">
            
+          <!-- CVS -->
           <button  type="button" pButton pRipple icon="pi pi-file-o" 
                     (click)="dt.exportCSV()" class="mr-4" pTooltip="CSV"
                     data-toggle="tooltip" data-placement="top"
                     title="Download CVS"></button>
 
+          <!-- Excel -->
           <button  type="button" pButton pRipple icon="pi pi-file-excel" 
                     (click)="exportExcel()" class="p-button-success mr-4" 
                     data-toggle="tooltip" data-placement="top"
                     title="Download Excel"></button>
-
+          
+          <!-- Ausgewählte Datei CVS -->
           <button  type="button" pButton pRipple icon="pi pi-filter" 
                     (click)="dt.exportCSV({selectionOnly:true})"
                     class="p-button-warning  mr-4" data-toggle="tooltip" 
                     data-placement="top"
                     title="Ausgewählte Datei CVS"></button>
      
-          <span class="p-input-icon-left">
+         <!-- Suche... -->
+         <span class="p-input-icon-left">
                       <i class="pi pi-search"></i>
                       <input pInputText type="text"
                       (input)="dt.filterGlobal($event.target.value, 'contains')"
@@ -47,52 +71,88 @@
         </div>
    </ng-template>
 
+
+           <!------Daten ----->
   <ng-template pTemplate="header" let-columns>
       <tr>
         <th *ngFor="let col of columns" [pSortableColumn]="col.field">
          {{col.header}}
          <p-sortIcon [field]="col.field"></p-sortIcon>
       </th>         
-   </tr>
+     </tr>
+
+     <tr>
+        <th>
+            <input pInputText type="text" 
+            (input)="dt.filter($event.target.value, 'Vorname', 'contains')"
+             [value]="dt.filters['Vorname']?.value" placeholder="Suche nach Name" 
+            >
+        </th>
+        <th>
+            <input pInputText type="text" 
+            (input)="dt.filter($event.target.value, 'Nachname', 'contains')"
+             [value]="dt.filters['Nachname']?.value" placeholder="Suche nach Nachname" 
+             class="p-column-filter">
+        </th>
+        <th>
+            <input pInputText type="hidden">
+        </th>
+        <th>
+            <input pInputText type="text"  
+            (input)="dt.filter($event.target.value, 'Stadt', 'contains')"
+             [value]="dt.filters['Stadt']?.value" placeholder="Suche nach Stadt" 
+             class="p-column-filter">
+        </th>
+
+        <th>
+            <input pInputText type="hidden">
+        </th>
+        <th>
+            <input pInputText  type="text"  
+            (input)="dt.filter($event.target.value, 'Postleitzeil', 'contains')"
+             [value]="dt.filters['Postleitzeil']?.value" placeholder="Suche nach Postleitzeil" 
+             class="p-column-filter">
+        </th>
+        <th>
+            <input pInputText type="hidden">
+        </th>
+       
+
+     </tr>
   </ng-template>
 
 
   <ng-template pTemplate="body" let-rowData let-columns="columns">
       <tr [pSelectableRow]="rowData">
-          <td *ngFor="let col of columns" (click) = "schuelerRow(rowData)">
+          <td *ngFor="let col of columns"
+              (click) = "schuelerRow(rowData)">
               {{rowData[col.field]}}
           </td>
       </tr>
   </ng-template>
 
 </p-table>
-
 </div>
 
+
+
+ <!------ Dialog neuer Scheuler hinzufügen ----->
 <p-dialog [(visible)]="schuelerDialog" 
         [style]="{width: '450px'}"
         [modal]="true" 
         styleClass="p-fluid">
+    
 
     <ng-template pTemplate="content">
-
-        <!--div class="p-field" *ngFor = "let col of cols; let i=index">
-            
-            <label for="col.header">{{col.header}}</label>
-            <input type="text" pInputText name="col.header"
-            [(ngModel)] = "schueler_."
-             required autofocus 
-            />
-        </div-->
-
+     
         <div class="p-field">
             <label for="Vorname">Vorname</label>
             <input type="text" pInputText name="Vorname"
-            [(ngModel)] = "schueler_.Vorname"
+            [(ngModel)] = "schueler.Vorname"
              required autofocus 
             />
             <small class="p-invalid"
-            *ngIf="submitted && !schueler_.Vorname">
+            *ngIf="submitted && !schueler.Vorname">
             Vorname bitte eingeben!
             </small>
         </div>
@@ -100,11 +160,11 @@
         <div class="p-field">
             <label for="Nachname">Nachname</label>
             <input type="text" pInputText name="Nachname"
-            [(ngModel)] = "schueler_.Nachname"
+            [(ngModel)] = "schueler.Nachname"
              required autofocus 
             />
             <small class="p-invalid"
-            *ngIf="submitted && !schueler_.Nachname">
+            *ngIf="submitted && !schueler.Nachname">
             Nachname bitte eingeben!
             </small>
         </div>
@@ -112,11 +172,11 @@
         <div class="p-field">
             <label for="Strasse">Strasse</label>
             <input type="text" pInputText name="Strasse"
-            [(ngModel)] = "schueler_.Strasse"
+            [(ngModel)] = "schueler.Strasse"
              required autofocus 
             />
             <small class="p-invalid"
-            *ngIf="submitted && !schueler_.Strasse">
+            *ngIf="submitted && !schueler.Strasse">
             Strasse bitte eingeben!
             </small>
         </div>
@@ -124,11 +184,11 @@
         <div class="p-field">
             <label for="Status">Status</label>
             <input type="text" pInputText name="Status"
-            [(ngModel)] = "schueler_.Status"
+            [(ngModel)] = "schueler.Status"
              required autofocus 
             />
             <small class="p-invalid"
-                   *ngIf="submitted && !schueler_.Status">
+                   *ngIf="submitted && !schueler.Status">
                    Status bitte eingeben!
            </small>
         </div>
@@ -140,6 +200,7 @@
         <button pButton pRipple label="Abbrechen"
          icon="pi pi-times"
          class="p-button-text"
+         (click) = "cancelModal()"
          ></button>
 
         <button pButton pRipple label="Speicher" 
@@ -150,3 +211,8 @@
     </ng-template>
 </p-dialog>
 
+
+
+
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

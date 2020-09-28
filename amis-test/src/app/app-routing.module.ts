@@ -4,6 +4,7 @@ import { SchuelerFormComponent } from './schueler-form/schueler-form.component';
 import { VsSchuelerTableListComponent } from './vs-schueler-table-list/vs-schueler-table-list.component';
 
 const routes: Routes = [
+
 ];
 
 @NgModule({

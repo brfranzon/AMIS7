@@ -1,8 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SchuelerService } from '../vs_schueler_data/schueler.service';
-
-
 
 @NgModule({
   declarations: [],
@@ -10,6 +7,6 @@ import { SchuelerService } from '../vs_schueler_data/schueler.service';
     CommonModule
   ],
   exports: [VsSchuelerTableListModule],
-  providers: [SchuelerService]
+  providers: []
 })
 export class VsSchuelerTableListModule { }

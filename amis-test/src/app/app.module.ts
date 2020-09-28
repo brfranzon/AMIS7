@@ -20,6 +20,10 @@ import {ProgressBarModule} from 'primeng/progressbar';
 import {InputTextModule} from 'primeng/inputtext';
 import {ToolbarModule} from 'primeng/toolbar';
 
+import { ConfirmationService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+
 
 import { CdkTableModule } from '@angular/cdk/table';
 import { A11yModule } from '@angular/cdk/a11y';
@@ -30,6 +34,7 @@ import { AppComponent } from './app.component';
 import { VsListViewComponent } from './vs-list-view/vs-list-view.component';
 import { VsSchuelerTableListComponent } from './vs-schueler-table-list/vs-schueler-table-list.component';
 import { SchuelerFormComponent } from './schueler-form/schueler-form.component';
+import { SchuelerModelService } from './vs_schueler_data/generic-http/schueler-model.service';
 
 
 @NgModule({
@@ -60,10 +65,11 @@ import { SchuelerFormComponent } from './schueler-form/schueler-form.component';
     A11yModule,
     MatTableModule,
     FormsModule,
-    ToolbarModule
+    ToolbarModule,
+    ConfirmDialogModule
     
   ],
-  providers: [],
+  providers: [ConfirmationService, MessageService, SchuelerModelService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
