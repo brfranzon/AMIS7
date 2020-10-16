@@ -24,15 +24,17 @@
         [disabled]="!AllselectedSchueler || 
         !AllselectedSchueler.length">
         </button>
-</div>
+       </div>
 
  
         <!------Tabelle für die Daten ----->
-<p-table #dt [columns]="cols" 
+<p-table #dt
+        [columns]="cols" 
         [value]="AllSchueler"
         selectionMode="multiple" 
         [(selection)]="AllselectedSchueler"
-        [rows]="10" [paginator]="true">
+        [rows]="5" [paginator]="true"
+        [reorderableColumns]="true">
 
      <ng-template pTemplate="caption" class="d-flex align-item-center">
        <div class="d-flex justify-content-start">
@@ -74,20 +76,31 @@
 
            <!------Daten ----->
   <ng-template pTemplate="header" let-columns>
+
+        <tr>
+        <th>
+          <input pInputText type="text" 
+          (input)="dt.filter($event.target.value, 'Vorname', 'contains')"
+           [value]="dt.filters['Vorname']?.value" placeholder="Suche nach Vorname">
+        </th>
+         <th>
+              <input pInputText type="text" 
+              (input)="dt.filter($event.target.value, 'Nachname', 'contains')"
+               [value]="dt.filters['Nachname']?.value" placeholder="Suche nach Nachname">
+        </th>
+        </tr>  
+
       <tr>
-        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+        <th *ngFor="let col of columns" [pSortableColumn]="col.field" pReorderableColumn>
          {{col.header}}
          <p-sortIcon [field]="col.field"></p-sortIcon>
       </th>         
-     </tr>
 
-     <tr>
-        <th>
-            <input pInputText type="text" 
-            (input)="dt.filter($event.target.value, 'Vorname', 'contains')"
-             [value]="dt.filters['Vorname']?.value" placeholder="Suche nach Name" 
-            >
-        </th>
+         
+
+    
+      
+        <!--div>
         <th>
             <input pInputText type="text" 
             (input)="dt.filter($event.target.value, 'Nachname', 'contains')"
@@ -116,19 +129,19 @@
         <th>
             <input pInputText type="hidden">
         </th>
-       
+        </div-->
 
-     </tr>
   </ng-template>
 
 
-  <ng-template pTemplate="body" let-rowData let-columns="columns">
-      <tr [pSelectableRow]="rowData">
-          <td *ngFor="let col of columns"
-              (click) = "schuelerRow(rowData)">
+  <ng-template pTemplate="body" let-rowData let-columns="columns" let-index="rowIndex">
+
+      <tr [pSelectableRow]="rowData" [pReorderableRow]="index">
+          <td *ngFor="let col of columns">
               {{rowData[col.field]}}
           </td>
       </tr>
+
   </ng-template>
 
 </p-table>
@@ -212,7 +225,9 @@
 </p-dialog>
 
 
-
-
-
 <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+
+
+<schueler-form *ngIf = "schuerlerOnClickShow"
+    [selectedSchuelerOnClick] = "schuerlerOnClick"
+></schueler-form>

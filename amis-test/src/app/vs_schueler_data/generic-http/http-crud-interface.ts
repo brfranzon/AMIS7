@@ -1,10 +1,11 @@
 import { Observable } from 'rxjs';
 
 
-export interface httpCrudOperations<M, ID>{
+export interface httpCrudOperations<T, ID>{
     
-    findAll(): Observable<M[]>;
-    save(t: M): Observable<M>;
-    delete(id: ID): Observable<M>
+    findAll(): Observable<T[]>;
+    save(t: T): Observable<T>;
+    delete(id: ID): Observable<T>;
+    update(id: ID, t: T): Observable<T>;
 
 }

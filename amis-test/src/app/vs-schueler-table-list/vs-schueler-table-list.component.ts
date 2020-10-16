@@ -23,6 +23,9 @@ export class VsSchuelerTableListComponent implements OnInit {
   AllselectedSchueler: SchuelerModel[];
   schueler = new SchuelerModel();
 
+  schuerlerOnClick: any;
+  schuerlerOnClickShow: boolean = false;
+  
   cols: any[];
   exportColumns: any[];
 
@@ -30,11 +33,11 @@ export class VsSchuelerTableListComponent implements OnInit {
   schuelerDialog: boolean;
 
   dataOnClickRow: any;
-
-
+ 
   ngOnInit(): void {
     this.getAllSchueler();
 
+    
     this.cols = [
       { field: 'Vorname', header: 'Vorname' },
       { field: 'Nachname', header: 'Nachname' } ,
@@ -48,18 +51,46 @@ export class VsSchuelerTableListComponent implements OnInit {
  
      this.exportColumns = this.cols.map(col => ({title: col.header, dataKey: col.field}));
   }
+    
  
   /* Alle Schueler aus dem Service */
-  getAllSchueler(){
+  getAllSchueler(): void{
     this._schuelerModelService.findAll().subscribe(
-      data => this.AllSchueler = data
-    );
-      
+      data => 
+      { this.AllSchueler = data,
+        console.log('data', data),
+        this.saveLocalStorage('key', JSON.stringify(data))
+      }
+      );
+ }
+
+
+ /* Save local storage */
+  saveLocalStorage(key: string, params: any){
+   localStorage.setItem(key, params);
   }
+
+  /* Read from Local Storage */
+  readFromLocalStorage(){
+   return JSON.parse(localStorage.getItem('key'));
+  }
+
 
  /* on Click auf die Zeile */
   schuelerRow(rowData: any){
-    console.table([rowData]);
+    console.log(rowData);
+    console.log(Array.of(rowData));
+    this.schuerlerOnClickShow =! this.schuerlerOnClickShow;
+    this.schuerlerOnClick = Array.of(rowData);
+   /*
+    if(this.readFromLocalStorage().length > 0){
+      for (let i = 0; i < this.readFromLocalStorage().length; i++){
+        let key = localStorage.key(i);
+        let value = localStorage.getItem(key);
+        console.log(key, value);
+      }
+    }
+   */ 
   }
 
  /* open Dialog */

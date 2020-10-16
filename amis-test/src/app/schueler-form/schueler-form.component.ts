@@ -1,15 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { SchuelerModel } from '../vs_schueler_data/generic-http/schueler-model';
+
 
 @Component({
-  selector: 'app-schueler-form',
+  selector: 'schueler-form',
   templateUrl: './schueler-form.component.html',
   styleUrls: ['./schueler-form.component.css']
 })
 export class SchuelerFormComponent implements OnInit {
 
-  constructor() { }
+  @Input() selectedSchuelerOnClick: any;
+
+  constructor() {
+   }
 
   ngOnInit(): void {
+  //  console.log(this.selectedSchuelerOnClick);
   }
 
 }
